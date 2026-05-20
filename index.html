@@ -1,0 +1,1904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#4A1020">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Ayngaran & Abinayah · June 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!--
+  ════════════════════════════════════════════════════════
+  PHOTO UPLOAD SETUP INSTRUCTIONS
+  ════════════════════════════════════════════════════════
+
+  RECOMMENDED: Google Drive + Google Form (free, private, easy)
+
+  Step 1 — Create a private Google Drive folder:
+    • Go to drive.google.com
+    • Create a new folder, e.g. "Wedding Photos – A&A"
+    • Right-click → Share → make sure "Restricted" (only you can see it)
+
+  Step 2 — Create a Google Form:
+    • Go to forms.google.com → Blank form
+    • Title: "Share Your Photos – Ayngaran & Abinayah"
+    • Add a question: type = "File upload"
+    • Under file upload settings, tick: Allow multiple files, set max size to 10MB+
+    • In Settings → Responses → Link to Sheets (optional, for tracking)
+    • In Settings → Responses → the uploaded files will automatically go
+      to a folder inside YOUR Google Drive (linked to the form)
+    • Guests CANNOT see each other's uploads — they only submit
+
+  Step 3 — Get your form link:
+    • Click "Send" → link icon → copy the URL
+    • Paste it below as PHOTO_UPLOAD_URL
+
+  Step 4 — The QR code is auto-generated from that URL in the website.
+
+  PHOTO_UPLOAD_URL = "YOUR_GOOGLE_FORM_LINK_HERE"
+  ════════════════════════════════════════════════════════
+-->
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --burgundy: #6B1A2A;
+    --burgundy-light: #8B2A3E;
+    --burgundy-dark: #4A1020;
+    --gold: #C9A84C;
+    --gold-light: #E8C97E;
+    --gold-pale: #F5EDD6;
+    --emerald: #1A4A3A;
+    --emerald-mid: #2D6B55;
+    --cream: #FAF6EF;
+    --cream-dark: #F0E8D8;
+    --text-dark: #2A1A10;
+    --text-mid: #5A3A2A;
+    --text-light: #8A6A5A;
+    --nav-h: 56px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: var(--burgundy-dark);
+    border-bottom: 1px solid var(--gold);
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.25rem;
+    gap: 0.75rem;
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    flex-shrink: 0;
+  }
+
+  /* Hidden until unlocked */
+  .nav-links.locked,
+  .hamburger.locked { display: none !important; }
+
+  .nav-links button {
+    background: none;
+    border: none;
+    color: var(--gold-pale);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 0 0.85rem;
+    height: var(--nav-h);
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nav-links button:hover { opacity: 1; }
+  .nav-links button.active { opacity: 1; color: var(--gold-light); border-bottom: 2px solid var(--gold); }
+
+  /* Hamburger */
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    flex-direction: column;
+    gap: 5px;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--gold-light);
+    transition: all 0.25s;
+    transform-origin: center;
+  }
+
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* Mobile drawer */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--nav-h);
+    left: 0; right: 0; bottom: 0;
+    background: var(--burgundy-dark);
+    z-index: 190;
+    flex-direction: column;
+    padding: 1.5rem 1.5rem 2rem;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu button {
+    background: none;
+    border: none;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    color: var(--gold-pale);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 1rem 0;
+    text-align: left;
+    opacity: 0.85;
+    -webkit-tap-highlight-color: transparent;
+    min-height: 48px;
+  }
+
+  .mobile-menu button.active { color: var(--gold-light); opacity: 1; }
+  .mobile-menu button:last-child { border-bottom: none; }
+
+  /* ── PASSWORD GATE ── */
+  .gate-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: linear-gradient(160deg, var(--burgundy-dark) 0%, #2A0A15 50%, var(--emerald) 100%);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .gate-overlay.open { display: flex; }
+
+  .gate-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 15% 85%, rgba(201,168,76,0.1) 0%, transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(201,168,76,0.07) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .gate-box {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    animation: gateIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes gateIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .gate-ornament {
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 0.6em;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .gate-lock {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 1.5rem;
+    opacity: 0.5;
+  }
+
+  .gate-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    font-weight: 300;
+    color: var(--gold-light);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .gate-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(245,237,214,0.5);
+    margin-bottom: 0.35rem;
+  }
+
+  .gate-divider {
+    width: 50px;
+    height: 1px;
+    background: var(--gold);
+    margin: 1.5rem auto;
+    opacity: 0.6;
+  }
+
+  .gate-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,237,214,0.4);
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+
+  .gate-input-wrap { position: relative; margin-bottom: 0.75rem; }
+
+  .gate-input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(201,168,76,0.35);
+    border-radius: 6px;
+    color: var(--gold-pale);
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    padding: 0.9rem 3rem 0.9rem 1rem;
+    outline: none;
+    transition: border-color 0.25s;
+    -webkit-appearance: none;
+    min-height: 52px;
+    text-align: center;
+  }
+
+  .gate-input::placeholder { color: rgba(245,237,214,0.25); letter-spacing: 0.05em; }
+  .gate-input:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+  .gate-input.error { border-color: #E05555; animation: shake 0.4s ease; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-8px); }
+    40%     { transform: translateX(8px); }
+    60%     { transform: translateX(-5px); }
+    80%     { transform: translateX(5px); }
+  }
+
+  .gate-toggle {
+    position: absolute;
+    right: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(245,237,214,0.35);
+    padding: 4px;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .gate-toggle:hover { color: var(--gold); }
+
+  .gate-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--gold);
+    border: none;
+    border-radius: 6px;
+    color: var(--burgundy-dark);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.1s;
+    min-height: 52px;
+    -webkit-tap-highlight-color: transparent;
+    margin-bottom: 1rem;
+  }
+
+  .gate-btn:hover { background: var(--gold-light); }
+  .gate-btn:active { transform: scale(0.98); }
+
+  .gate-error-msg {
+    font-size: 0.78rem;
+    color: #E07070;
+    letter-spacing: 0.05em;
+    min-height: 1.2em;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .gate-ask {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .gate-ask p { font-size: 0.75rem; color: rgba(245,237,214,0.3); margin-bottom: 0.6rem; }
+
+  .gate-ask a {
+    font-size: 0.72rem;
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    padding-bottom: 1px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+
+  .gate-ask a:hover { opacity: 1; }
+
+  .gate-close {
+    position: absolute;
+    top: -3rem;
+    right: 0;
+    background: none;
+    border: none;
+    color: rgba(245,237,214,0.3);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 8px;
+    line-height: 1;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.2s;
+  }
+
+  .gate-close:hover { color: var(--gold-pale); }
+
+  /* ── NAV SECRET INPUT (desktop) ── */
+  .nav-secret {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .nav-secret.visible { display: flex; }
+
+  .nav-secret input {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 4px;
+    color: var(--gold-pale);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    padding: 5px 8px;
+    width: 150px;
+    outline: none;
+    -webkit-appearance: none;
+    transition: border-color 0.2s;
+  }
+
+  .nav-secret input::placeholder { color: rgba(245,237,214,0.3); }
+  .nav-secret input:focus { border-color: var(--gold); }
+  .nav-secret input.error { border-color: #E05555; animation: shake 0.4s ease; }
+
+  .nav-secret .go-btn {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 4px;
+    color: var(--gold-light);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 8px;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.2s;
+  }
+
+  .nav-secret .go-btn:hover { background: rgba(201,168,76,0.15); }
+
+  /* Mobile secret section inside drawer */
+  .mobile-secret {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(201,168,76,0.2);
+    display: none;
+  }
+
+  .mobile-secret.visible { display: block; }
+
+  .mobile-secret p {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245,237,214,0.4);
+    margin-bottom: 0.75rem;
+  }
+
+  .mobile-secret-row { display: flex; gap: 0.5rem; }
+
+  .mobile-secret input {
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(201,168,76,0.35);
+    border-radius: 4px;
+    color: var(--gold-pale);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    padding: 10px 12px;
+    outline: none;
+    -webkit-appearance: none;
+    min-height: 44px;
+    transition: border-color 0.2s;
+  }
+
+  .mobile-secret input::placeholder { color: rgba(245,237,214,0.3); }
+  .mobile-secret input.error { border-color: #E05555; animation: shake 0.4s ease; }
+
+  .mobile-secret .go-btn {
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 4px;
+    color: var(--gold-light);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (max-width: 640px) {
+    .nav-secret { display: none !important; }
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: calc(100svh - var(--nav-h));
+    background: linear-gradient(160deg, var(--burgundy-dark) 0%, var(--burgundy) 55%, var(--emerald) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 80%, rgba(201,168,76,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(201,168,76,0.08) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  .hero-ornament { font-size: 1.2rem; color: var(--gold); letter-spacing: 0.5em; margin-bottom: 1.5rem; opacity: 0.8; }
+
+  .hero-names {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 12vw, 6rem);
+    font-weight: 300;
+    color: var(--gold-light);
+    line-height: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-ampersand { display: block; font-style: italic; font-size: 0.55em; color: var(--gold); margin: 0.25em 0; }
+
+  .hero-date {
+    font-size: clamp(0.65rem, 2vw, 0.8rem);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-pale);
+    margin-top: 1.75rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-divider { width: 60px; height: 1px; background: var(--gold); margin: 1.25rem auto; position: relative; z-index: 1; }
+
+  .hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    color: rgba(245,237,214,0.7);
+    position: relative;
+    z-index: 1;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+
+  .countdown-grid { display: flex; gap: 1.25rem; margin-top: 2.25rem; position: relative; z-index: 1; align-items: flex-start; }
+  .countdown-unit { text-align: center; }
+
+  .countdown-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 8vw, 2.8rem);
+    font-weight: 300;
+    color: var(--gold-light);
+    line-height: 1;
+    display: block;
+  }
+
+  .countdown-label { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,237,214,0.45); margin-top: 4px; display: block; }
+  .countdown-sep { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.5rem, 6vw, 2rem); color: var(--gold); opacity: 0.4; padding-top: 2px; }
+
+  .btn-primary {
+    display: inline-block;
+    margin-top: 2.25rem;
+    padding: 0.85rem 2.25rem;
+    background: none;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+    position: relative;
+    z-index: 1;
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-primary:hover, .btn-primary:focus { background: var(--gold); color: var(--burgundy-dark); outline: none; }
+
+  /* ── PHOTO UPLOAD SECTION ── */
+  .photo-section {
+    background: var(--emerald);
+    padding: 4rem 1.5rem;
+    text-align: center;
+  }
+
+  .photo-section-inner { max-width: 800px; margin: 0 auto; }
+
+  .photo-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    font-weight: 300;
+    color: var(--gold-light);
+    margin-bottom: 0.5rem;
+  }
+
+  .photo-section-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(245,237,214,0.5);
+    margin-bottom: 2rem;
+  }
+
+  .photo-rule { width: 60px; height: 1px; background: var(--gold); margin: 0 auto 0.75rem; opacity: 0.7; }
+
+  .photo-grid {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .qr-frame {
+    background: white;
+    padding: 1rem;
+    border: 3px solid var(--gold);
+    flex-shrink: 0;
+  }
+
+  .qr-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-top: 0.6rem;
+    text-align: center;
+    font-family: 'Jost', sans-serif;
+  }
+
+  .photo-info { max-width: 300px; text-align: left; }
+
+  .photo-info-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    color: var(--gold-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .photo-info-text {
+    font-size: 0.85rem;
+    color: rgba(245,237,214,0.6);
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+  }
+
+  .btn-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    background: var(--gold);
+    color: var(--emerald);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.25s;
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-upload:hover { background: var(--gold-light); }
+
+  .photo-note {
+    font-size: 0.72rem;
+    color: rgba(245,237,214,0.3);
+    margin-top: 0.75rem;
+    line-height: 1.5;
+  }
+
+  /* ── SECTION LAYOUT ── */
+  .section { max-width: 800px; margin: 0 auto; padding: 3.5rem 1.25rem; }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 6vw, 2.6rem);
+    font-weight: 300;
+    color: var(--burgundy);
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .gold-rule { width: 60px; height: 1px; background: var(--gold); margin: 0 auto 0.75rem; }
+
+  /* ── STORY TIMELINE ── */
+  .timeline { position: relative; padding-left: 2rem; }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 8px; bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), var(--emerald-mid));
+  }
+
+  .timeline-item { position: relative; margin-bottom: 2.25rem; padding-left: 1.25rem; }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem; top: 8px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--cream);
+  }
+
+  .timeline-year { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 0.2rem; }
+  .timeline-title { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: var(--burgundy); margin-bottom: 0.35rem; }
+  .timeline-text { font-size: 0.875rem; color: var(--text-mid); line-height: 1.7; }
+
+  /* ── CEREMONY CARDS ── */
+  .ceremony-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem; margin-top: 1.75rem; }
+  .ceremony-card { background: white; border: 1px solid var(--cream-dark); border-top: 3px solid var(--gold); padding: 1.25rem; }
+  .ceremony-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--burgundy); margin-bottom: 0.5rem; line-height: 1.3; }
+  .ceremony-card-text { font-size: 0.83rem; color: var(--text-mid); line-height: 1.65; }
+
+  /* ── DRESS PALETTE ── */
+  .dress-palette { display: flex; gap: 0.9rem; margin-top: 1.5rem; flex-wrap: wrap; justify-content: center; }
+  .dress-swatch { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+  .swatch-circle { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
+  .swatch-label { font-size: 0.68rem; color: var(--text-light); text-align: center; }
+
+  /* ── NOTICE BOX ── */
+  .notice-box {
+    background: var(--gold-pale);
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    padding: 1.25rem 1.5rem;
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .notice-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+  .notice-title { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: var(--burgundy); margin-bottom: 0.35rem; }
+  .notice-text { font-size: 0.85rem; color: var(--text-mid); line-height: 1.65; }
+
+  /* ── RSVP ── */
+  .rsvp-section { background: var(--burgundy-dark); padding: 4.5rem 1.5rem; text-align: center; }
+  .rsvp-section .section-title { color: var(--gold-light); }
+  .rsvp-section .section-subtitle { color: rgba(245,237,214,0.55); }
+  .rsvp-section .gold-rule { background: var(--gold); }
+
+  .rsvp-note { font-size: 0.875rem; color: rgba(245,237,214,0.5); max-width: 400px; margin: 0 auto 2rem; line-height: 1.65; }
+
+  .btn-rsvp {
+    display: inline-block;
+    padding: 1rem 2.75rem;
+    background: var(--gold);
+    color: var(--burgundy-dark);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s;
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-rsvp:hover { background: var(--gold-light); }
+
+  /* ── FAQ ── */
+  .faq-item { border-bottom: 1px solid var(--cream-dark); padding: 1.25rem 0; }
+  .faq-q { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--burgundy); margin-bottom: 0.5rem; font-weight: 400; line-height: 1.4; }
+  .faq-a { font-size: 0.875rem; color: var(--text-mid); line-height: 1.7; }
+
+  /* ── HIDDEN BANNER ── */
+  .hidden-banner { background: var(--emerald); border-bottom: 2px solid var(--gold); padding: 0.6rem 1.25rem; text-align: center; }
+  .hidden-banner span { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-light); }
+
+  /* ── TIMETABLE ── */
+  .timetable-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 1.5rem; }
+  .timetable { width: 100%; min-width: 420px; border-collapse: collapse; font-size: 0.875rem; }
+  .timetable th { background: var(--burgundy); color: var(--gold-light); font-family: 'Jost', sans-serif; font-weight: 400; letter-spacing: 0.1em; font-size: 0.7rem; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; }
+  .timetable td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--cream-dark); color: var(--text-mid); vertical-align: top; }
+  .timetable tr:nth-child(even) td { background: rgba(240,232,216,0.4); }
+  .timetable .time-col { font-weight: 500; color: var(--burgundy); white-space: nowrap; width: 100px; }
+  .timetable tr.highlight td { background: var(--gold-pale); font-weight: 500; color: var(--burgundy-dark); }
+
+  /* ── DAY TIMELINE ── */
+  .day-timeline { display: flex; flex-direction: column; margin-top: 1.5rem; border-left: 2px solid var(--gold); padding-left: 1.5rem; }
+  .day-event { position: relative; padding: 0.75rem 0; border-bottom: 1px dashed var(--cream-dark); }
+  .day-event:last-child { border-bottom: none; }
+
+  .day-event::before {
+    content: '';
+    position: absolute;
+    left: -1.6rem; top: 1.1rem;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--cream);
+  }
+
+  .day-event.highlight-event {
+    background: var(--gold-pale);
+    padding: 0.75rem;
+    margin-left: -0.5rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--gold-light);
+    border-bottom: 1px solid var(--gold-light);
+  }
+
+  .day-event.highlight-event::before { left: -2.1rem; }
+
+  .day-time { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 0.2rem; }
+  .day-label { font-family: 'Cormorant Garamond', serif; font-size: clamp(1rem, 3vw, 1.15rem); color: var(--burgundy); line-height: 1.3; }
+  .day-desc { font-size: 0.82rem; color: var(--text-light); margin-top: 0.2rem; line-height: 1.5; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--burgundy-dark); padding: 2.5rem 1.5rem; text-align: center; }
+  .footer-names { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--gold-light); font-weight: 300; margin-bottom: 0.5rem; }
+  .footer-hashtag { font-size: 0.72rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; opacity: 0.8; }
+  .footer-note { font-size: 0.7rem; color: rgba(245,237,214,0.25); margin-top: 1.25rem; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hamburger.locked { display: none !important; }
+    .ceremony-cards { grid-template-columns: 1fr; }
+    .section { padding: 2.5rem 1rem; }
+    .hero { padding: 2.5rem 1rem; }
+    .timeline { padding-left: 1.5rem; }
+    .timeline-item { padding-left: 1rem; }
+    .timeline-item::before { left: -1.5rem; }
+    .day-timeline { padding-left: 1.25rem; }
+    .day-event::before { left: -1.35rem; }
+    .day-event.highlight-event::before { left: -1.85rem; }
+    .photo-info { text-align: center; }
+    .photo-grid { flex-direction: column; gap: 1.75rem; }
+  }
+
+  @media (max-width: 400px) {
+    .countdown-grid { gap: 0.75rem; }
+    .countdown-sep { display: none; }
+  }
+  /* ── PHOTO BANNER (scrolling, hidden until unlocked) ── */
+  .photo-banner {
+    display: none;
+    width: 100%;
+    overflow: hidden;
+    background: var(--burgundy-dark);
+    border-top: 1px solid rgba(201,168,76,0.3);
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    position: relative;
+    height: 320px;
+  }
+
+  @media (max-width: 640px) { .photo-banner { height: 220px; } }
+
+  .photo-banner.visible { display: block; }
+
+  .photo-banner-track {
+    display: flex;
+    gap: 12px;
+    height: 100%;
+    animation: bannerScroll 60s linear infinite;
+    width: max-content;
+  }
+
+  .photo-banner:hover .photo-banner-track { animation-play-state: paused; }
+
+  @keyframes bannerScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-25%); }
+  }
+    100% { transform: translateX(-50%); }
+  }
+
+  .banner-img {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  /* Placeholder tile shown before real images are added */
+  .banner-placeholder {
+    height: 100%;
+    width: 260px;
+    background: var(--burgundy);
+    border: 1px solid rgba(201,168,76,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+    color: rgba(245,237,214,0.3);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .banner-placeholder svg { opacity: 0.25; }
+
+  /* ── OUR STORY PHOTO GRID ── */
+  .story-photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin: 2.5rem 0;
+  }
+
+  .story-photo-grid img,
+  .story-photo-placeholder {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  .story-photo-placeholder {
+    background: var(--cream-dark);
+    border: 1px dashed rgba(201,168,76,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .story-photo-placeholder svg { opacity: 0.3; }
+
+  @media (max-width: 500px) {
+    .story-photo-grid { grid-template-columns: 1fr; }
+    .photo-banner { height: 180px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ PASSWORD GATE ══ -->
+<div class="gate-overlay" id="gate-overlay">
+  <div class="gate-box">
+    <button class="gate-close" onclick="closeGate()" aria-label="Close">✕</button>
+    <span class="gate-ornament">✦ &nbsp; ✦ &nbsp; ✦</span>
+
+    <div class="gate-lock">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="11" width="18" height="11" rx="2" stroke="#C9A84C" stroke-width="1.5"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="#C9A84C" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="12" cy="16" r="1.5" fill="#C9A84C"/>
+      </svg>
+    </div>
+
+    <h2 class="gate-title" id="gate-title">Private Event</h2>
+    <p class="gate-subtitle" id="gate-subtitle">Ayngaran &amp; Abinayah · June 2026</p>
+    <p style="font-size:0.8rem;color:rgba(245,237,214,0.4);margin-top:0.4rem;line-height:1.5;">Use the password shared by your host<br>to see event details.</p>
+
+    <div class="gate-divider"></div>
+
+    <span class="gate-label">Event Password</span>
+    <div class="gate-input-wrap">
+      <input type="password" id="gate-pw" class="gate-input" placeholder="Enter password…"
+        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+        onkeydown="if(event.key==='Enter') submitGate()" />
+      <button class="gate-toggle" onclick="togglePw()" aria-label="Show password">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+    </div>
+
+    <span class="gate-error-msg" id="gate-error"></span>
+    <button class="gate-btn" onclick="submitGate()">View Event</button>
+
+    <div class="gate-ask">
+      <p>Need the password?</p>
+      <a href="mailto:ayngaranabinayah@gmail.com">Ask the Host</a>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="goHome()"><img src="wedding-logo-gold.png" alt="A & A" style="height:36px;width:auto;display:block;filter:drop-shadow(0 0 2px rgba(201,168,76,0.3));"></div>
+
+  <ul class="nav-links locked" id="nav-links-list">
+    <li><button onclick="showPage('home')" id="nav-home" class="active">Home</button></li>
+    <li><button onclick="requireAuth('story')" id="nav-story">Our Story</button></li>
+    <li><button onclick="requireAuth('wedding')" id="nav-wedding">The Wedding</button></li>
+    <li><button onclick="requireAuth('rsvp')" id="nav-rsvp">RSVP</button></li>
+    <li><button onclick="requireAuth('faq')" id="nav-faq">FAQ</button></li>
+  </ul>
+
+  <!-- Secret input — revealed after main site unlock -->
+  <div class="nav-secret" id="nav-secret">
+    <input type="text" id="secret-input" placeholder="Event code…"
+      autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+      onkeydown="if(event.key==='Enter') goSecret('secret-input')" />
+    <button class="go-btn" onclick="goSecret('secret-input')">Go</button>
+  </div>
+
+  <button class="hamburger locked" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-menu" id="mobile-menu">
+  <button onclick="showPage('home');closeMenu()" id="mob-home" class="active">Home</button>
+  <button onclick="requireAuth('story');closeMenu()" id="mob-story">Our Story</button>
+  <button onclick="requireAuth('wedding');closeMenu()" id="mob-wedding">The Wedding</button>
+  <button onclick="requireAuth('rsvp');closeMenu()" id="mob-rsvp">RSVP</button>
+  <button onclick="requireAuth('faq');closeMenu()" id="mob-faq">FAQ</button>
+  <!-- Secret code section — revealed after main site unlock -->
+  <div class="mobile-secret" id="mobile-secret">
+    <p>Event code</p>
+    <div class="mobile-secret-row">
+      <input type="text" id="mob-secret-input" placeholder="Enter event code…"
+        autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
+        onkeydown="if(event.key==='Enter') goSecret('mob-secret-input')" />
+      <button class="go-btn" onclick="goSecret('mob-secret-input')">Go</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <img src="wedding-logo-gold.png" alt="A &amp; A" style="width:min(260px,55vw);height:auto;margin-bottom:1rem;filter:drop-shadow(0 2px 12px rgba(201,168,76,0.25));position:relative;z-index:1;">
+    <div class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="hero-names">
+      Ayngaran
+      <span class="hero-ampersand">&</span>
+      Abinayah
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-date">Wednesday 24th June 2026 · London, England</div>
+    <p class="hero-tagline" style="margin-top:1.2rem;">"Two souls, one sacred bond — united through love, family, and tradition."</p>
+    <div class="countdown-grid">
+      <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-label">Days</span></div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-unit"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-label">Hours</span></div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-unit"><span class="countdown-num" id="cd-mins">--</span><span class="countdown-label">Mins</span></div>
+    </div>
+    <button class="btn-primary" onclick="openGate('site')">View Ceremony Details</button>
+  </div>
+
+  <!-- PHOTO BANNER — scrolling images, only visible after password entered -->
+  <!--
+    HOW TO ADD YOUR PHOTOS:
+    Replace each <div class="banner-placeholder"> with an <img> tag, e.g.:
+    <img src="photo1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+    Upload your images alongside this HTML file on Netlify.
+    The track is duplicated so the scroll loops seamlessly.
+  -->
+  <div class="photo-banner" id="photo-banner">
+    <div class="photo-banner-track" id="banner-track">
+            <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+            <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+            <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+            <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+</div>
+  </div>
+
+  <!-- PHOTO UPLOAD SECTION — only visible after password entered -->
+  <div class="photo-section" id="photo-section" style="display:none;">
+    <div class="photo-section-inner">
+      <div class="photo-rule"></div>
+      <div class="photo-section-title">Share Your Photos</div>
+      <p class="photo-section-sub">Capture a moment? We'd love to see it.</p>
+
+      <div class="photo-grid">
+        <div>
+          <div class="qr-frame">
+            <canvas id="qr-canvas" width="180" height="180"></canvas>
+          </div>
+          <p class="qr-label" style="color:rgba(245,237,214,0.4);margin-top:0.6rem;font-size:0.62rem;letter-spacing:0.15em;">Scan to upload</p>
+        </div>
+
+        <div class="photo-info">
+          <div class="photo-info-title">Upload Your Snaps</div>
+          <p class="photo-info-text">
+            Scan the QR code or tap the button below to share any photos you take during our celebrations. Each upload goes directly and privately to us — your photos are never visible to other guests.
+          </p>
+          <a href="https://forms.gle/YH6nBvv5VXU8FL1v5" target="_blank" id="upload-link" class="btn-upload">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Photos
+          </a>
+          <p class="photo-note">Uploads are private. Only Ayngaran &amp; Abinayah can view submitted photos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ OUR STORY ══ -->
+<div id="page-story" class="page">
+  <div class="section">
+    <div class="section-title">Our Story</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">From the moment we met, to the moment we said yes, leading to the moment we say I do<br>
+    A sonnet written with love and care dedicated to my darling wife - Abinayah</div>
+    <!--
+      OUR STORY PHOTOS — HOW TO ADD:
+      Replace each <div class="story-photo-placeholder"> with:
+      <img src="yourphoto.jpg" alt="Ayngaran and Abinayah" class="story-photo">
+      Upload images alongside this HTML file on Netlify.
+    -->
+
+    <!-- 6 photos above the timeline -->
+    <div class="story-photo-grid">
+      <img src="photo-1.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-2.JPG" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-3.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-4.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-5.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-6.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">The Beginning</div>
+        <div class="timeline-title">How We Met</div>
+        <div class="timeline-text">Abini — strange how fate began with sight,<br>
+          You watched my stories, quiet, from afar,<br>
+Yet something in you pulled me in that night,<br>
+I’m glad I chose to ask just who you are.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Our First Chapter</div>
+        <div class="timeline-title">Growing Together</div>
+        <div class="timeline-text">I saw at once your heart was never small,<br>
+Your world held close by those you love the most,<br>
+And though I joke I’ll outrank them all,<br>
+(Your twin still fights me for that sacred post).<br>
+<br>
+You dream in weddings, babies, perfect days,<br>
+Yet fought through storms that few could understand,<br>
+Through loss, through pain — you found your steady ways,<br>
+And now you heal the world with gentle hands.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">The Proposal - 25th April 2026</div>
+        <div class="timeline-title">She Said Yes</div>
+        <div class="timeline-text">So drive me forward, love—no maps, no plan,<br>
+For wherever you are… is where I stand.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Our Wedding - Wednesday 24th June 2026</div>
+        <div class="timeline-title">Forever Begins</div>
+        <div class="timeline-text">Surrounded by family and blessed by tradition, Ayngaran and Abinayah begin their life together.</div>
+      </div>
+    </div>
+
+    <!-- 6 photos below the timeline -->
+    <div class="story-photo-grid">
+      <img src="photo-7.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-8.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-9.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-10.jpg" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-11.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+      <img src="photo-12.jpeg" alt="Ayngaran and Abinayah" class="story-photo">
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ THE WEDDING ══ -->
+<div id="page-wedding" class="page">
+  <div class="section">
+    <div class="section-title">The Tamil Wedding</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">Wednesday, 24th June 2026 · 9:00am – 3:00pm</div>
+
+    <p style="font-size:0.875rem;color:var(--text-mid);line-height:1.8;margin-bottom:2rem;text-align:center;max-width:560px;margin-left:auto;margin-right:auto;">
+      We are so excited to celebrate our traditional Tamil wedding with you. This is a beautiful, rich ceremony full of ritual, meaning, and joy. Here is everything you need to know.
+    </p>
+    <div class="ceremony-cards">
+      <div class="ceremony-card" style="border-top-color:var(--burgundy);">
+        <div class="ceremony-card-title">📍 Venue</div>
+        <div class="ceremony-card-text">Meridian Grand<br>
+          Advent Way,<br>
+          London,<br>
+          N18 3AF
+        </div>
+      </div>
+      <div class="ceremony-card" style="border-top-color:var(--burgundy);">
+        <div class="ceremony-card-title">⚠️ Important</div>
+        <div class="ceremony-card-text"><strong>All guests must be seated by 9:30am.</strong><br>The groom will enter soon after.</div>
+      </div>
+    </div>
+    <div class="day-timeline">
+      <div class="day-event">
+        <div class="day-time">9:00 am</div>
+        <div class="day-label">Doors Open &amp; Guests Welcomed</div>
+        <div class="day-desc">Guests arrive and are seated. Traditional music begins. Traditional Eelam Tamil breakfast will be provided.</div>
+      </div>
+      <!-- <div class="day-event">
+        <div class="day-time">9:30 am</div>
+        <div class="day-label">Muhurtham — Auspicious Rituals Begin</div>
+        <div class="day-desc">The ceremony commences with Ganapathy Homam and opening prayers.</div>
+      </div> -->
+      <div class="day-event highlight-event">
+        <div class="day-time">9:30 am - 12:30pm ✦</div>
+        <div class="day-label">Thaali Time — The Sacred Tying</div>
+        <div class="day-desc">The most auspicious moment — Ayngaran ties the thaali around Abinayah's neck, sealing their union.<br>
+        Please be seated during the tying of the thaali so that everybody can see.</div>
+      </div>
+      <!-- <div class="day-event">
+        <div class="day-time">11:30 am</div>
+        <div class="day-label">Maala Maatral — Exchange of Garlands</div>
+        <div class="day-desc">Bride and groom exchange floral garlands three times, to the cheers of family.</div>
+      </div>
+      <div class="day-event">
+        <div class="day-time">12:00 pm</div>
+        <div class="day-label">Oonjal — The Sacred Swing</div>
+        <div class="day-desc">The couple are seated on a decorated swing while the women of the family sing traditional songs.</div>
+      </div> -->
+      <div class="day-event">
+        <div class="day-time">1:00 pm</div>
+        <div class="day-label">Wedding Lunch &amp; Photos with Family+Friends</div>
+        <div class="day-desc">A traditional Eelam Tamil feast served for all guests.<br>
+          Guests can queue to take photos with the bride and groom on stage after having lunch.</div>
+      </div>
+      <div class="day-event">
+        <div class="day-time">3:00 pm</div>
+        <div class="day-label">Ceremony Concludes</div>
+      </div>
+    </div>
+
+    <div class="notice-box">
+      <div class="notice-icon">🎁</div>
+      <div>
+        <div class="notice-title">A Note on Gifts</div>
+        <div class="notice-text">
+          No boxed gifts please.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,4vw,1.6rem);color:var(--burgundy);margin-bottom:0.5rem;">What to Expect</div>
+      <div class="gold-rule" style="margin:0 0 1.5rem;"></div>
+      <div class="ceremony-cards">
+        <div class="ceremony-card">
+          <div class="ceremony-card-title">🪔 Sacred Rituals</div>
+          <div class="ceremony-card-text">The ceremony includes fire rituals, chanting by the priest, and ancient customs passed through generations. Please remain respectful and quiet during the rituals.</div>
+        </div>
+        <div class="ceremony-card">
+          <div class="ceremony-card-title">📸 Photography</div>
+          <div class="ceremony-card-text">We have professional photographers. Please refrain from using flash during the ceremony itself.</div>
+        </div>
+        <div class="ceremony-card">
+          <div class="ceremony-card-title">👟 Footwear</div>
+          <div class="ceremony-card-text">You will be asked to remove your footwear before coming on stage for photos. Please plan accordingly and wear easy-to-remove shoes!</div>
+        </div>
+        <div class="ceremony-card">
+          <div class="ceremony-card-title">🌿 Dress Code</div>
+          <div class="ceremony-card-text">Traditional attire warmly welcomed and encouraged — sarees, veshtis, lounge suits. Please see the colour palette below.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;text-align:center;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,4vw,1.5rem);color:var(--burgundy);margin-bottom:0.5rem;">Suggested Colours</div>
+      <div class="gold-rule"></div>
+      <p style="font-size:1.5rem;color:var(--text-light);margin-bottom:1.25rem;">Please avoid white and black</p>
+      <!-- <div class="dress-palette">
+        <div class="dress-swatch"><div class="swatch-circle" style="background:#6B1A2A;"></div><div class="swatch-label">Burgundy</div></div>
+        <div class="dress-swatch"><div class="swatch-circle" style="background:#C9A84C;"></div><div class="swatch-label">Gold</div></div>
+        <div class="dress-swatch"><div class="swatch-circle" style="background:#1A4A3A;"></div><div class="swatch-label">Emerald</div></div>
+        <div class="dress-swatch"><div class="swatch-circle" style="background:#4A1070;"></div><div class="swatch-label">Violet</div></div>
+        <div class="dress-swatch"><div class="swatch-circle" style="background:#1A3A6B;"></div><div class="swatch-label">Royal Blue</div></div>
+        <div class="dress-swatch"><div class="swatch-circle" style="background:#8B2A3E;"></div><div class="swatch-label">Deep Rose</div></div>
+        <div class="dress-swatch"><div class="swatch-circle" style="background:#B87333;"></div><div class="swatch-label">Copper</div></div>
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- ══ RSVP ══ -->
+<div id="page-rsvp" class="page">
+  <div class="rsvp-section">
+    <div class="section-title">RSVP</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">We'd love to know you're coming</div>
+    <p class="rsvp-note">Please RSVP by Wednesday 27th May 2026.<br>
+      Let us know of any dietary requirements or accessibility needs when you fill in the form.</p>
+    <a href="https://forms.gle/tffWBGvcSuBwyhui6" target="_blank" class="btn-rsvp">RSVP Now</a>
+    <p style="font-size:0.72rem;color:rgba(245,237,214,0.25);margin-top:1.25rem;">You'll be taken to a Google Form — it takes under 2 minutes.</p>
+  </div>
+  <div class="section" style="padding-top:2.5rem;">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,5vw,1.8rem);color:var(--burgundy);text-align:center;margin-bottom:0.5rem;">Accommodation &amp; Travel</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">We want your stay to be as easy as possible</div>
+    <p style="font-size:0.875rem;color:var(--text-mid);line-height:1.8;text-align:center;">Ample parking is available at Meridian Grand.<br>
+      <a href="https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-edmonton.html">Premier Inn London Edmonton hotel</a> is less than a 10-minute walk from Meridian Grand.</p>
+  </div>
+</div>
+
+<!-- ══ FAQ ══ -->
+<div id="page-faq" class="page">
+  <div class="section">
+    <div class="section-title">FAQs</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">Everything you might be wondering</div>
+    <div class="faq-item">
+      <div class="faq-q">What should I wear?</div>
+      <div class="faq-a">Traditional attire is warmly encouraged — sarees, veshtis, and suits all look wonderful. Please avoid white, black, and red. Smart Western dress is also perfectly welcome.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I bring children?</div>
+      <div class="faq-a">Children are welcome at the traditional ceremony and reception. Please let us know on the RSVP form so we can ensure appropriate seating and food options.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is there parking available?</div>
+      <div class="faq-a">Free parking available at the venues.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Are there dietary options?</div>
+      <div class="faq-a">Only vegetarian food will be served at the traditional Tamil wedding, and due to the large number of guests it is difficult for us to guarantee that all allergens can be catered for.<br>
+        For those attending any of the other wedding events, please indicate your dietary options and allergens when you RSVP.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What is the thaali and why is the thaali time so important?</div>
+      <div class="faq-a">The thaali is a sacred gold necklace tied by the groom around the bride's neck at the most auspicious moment of the ceremony. This sacred time is determined through the alignment of the bride and groom's horoscopes with the positions of the stars and planets, and marks the moment we are officially wed in the eyes of our tradition — so please be seated well before this time!</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Should I bring a gift?</div>
+      <div class="faq-a">Please do not bring boxed gifts to the venue — space is limited and we would hate for anything to be misplaced.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">I have another question — who do I contact?</div>
+      <div class="faq-a">Please feel free to send any questions you have to <a href="mailto:ayngaranabinayah@gmail.com">ayngaranabinayah@gmail.com</a>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HIDDEN: PONNURUKKU ══ -->
+<div id="page-ponnurukku" class="page">
+  <div class="hidden-banner"><span>✦ Invited Guests Only · Please do not share this secret code and link ✦</span></div>
+  <div class="section">
+    <div class="section-title">Ponnurukku</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">Saturday, 20th June 2026 · 11:00am – 1:00pm</div>
+    <p style="font-size:0.875rem;color:var(--text-mid);line-height:1.8;margin-bottom:1.75rem;text-align:center;max-width:520px;margin-left:auto;margin-right:auto;">
+      The Ponnurukku is a traditional gold purifying ritual — a meaningful and intimate ceremony to bless the groom and family before the wedding.<br>
+      We are honoured to share this with you.
+    </p>
+    <div class="ceremony-cards">
+      <div class="ceremony-card" style="border-top-color:var(--burgundy);">
+        <div class="ceremony-card-title">📍 Venue</div>
+        <div class="ceremony-card-text">Ayngaran's Parents' House<br>
+          73, Clarkes Avenue,<br>
+          Worcester Park,<br>
+          Surrey,<br>
+          KT4 8QA</div>
+      </div>
+      <div class="ceremony-card" style="border-top-color:var(--burgundy);">
+        <div class="ceremony-card-title">🕙 Schedule</div>
+        <div class="ceremony-card-text">11:00am — Guests arrive<br>11:30am — Rituals begin<br>1:00pm — Lunch &amp; close</div>
+      </div>
+      <div class="ceremony-card" style="border-top-color:var(--burgundy);">
+        <div class="ceremony-card-title">👗 Dress Code</div>
+        <div class="ceremony-card-text">Traditional attire. Sarees, veshtis and smart casual clothes encouraged. Comfortable clothing recommended as some rituals involve sitting on the floor.</div>
+      </div>
+    </div>
+    <div style="margin-top:1.75rem;padding:1.25rem 1.5rem;background:var(--gold-pale);border-left:3px solid var(--gold);">
+      <p style="font-size:0.85rem;color:var(--text-mid);line-height:1.7;">Local street parking available. Traditional Eelam Tamil food will be served.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HIDDEN: MEHNDI ══ -->
+<div id="page-mehndi" class="page">
+  <div class="hidden-banner"><span>✦ Invited Guests Only · Please do not share this secret code and link ✦</span></div>
+  <div class="section">
+    <div class="section-title">Mehndi Evening</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">Sunday, 21st June 2026 · 4:30pm – 9:00pm</div>
+    <p style="font-size:0.875rem;color:var(--text-mid);line-height:1.8;margin-bottom:1.75rem;text-align:center;max-width:520px;margin-left:auto;margin-right:auto;">
+      Join us for a vibrant evening of henna, music, and celebration as we welcome the week of the wedding!
+    </p>
+    <div class="ceremony-cards">
+      <div class="ceremony-card" style="border-top-color:var(--burgundy);">
+        <div class="ceremony-card-title">📍 Venue</div>
+        <div class="ceremony-card-text">Ford Sports & Social Club (Newbury Park)<br>
+          Aldborough Road South,<br>
+           Ilford,<br>
+           IG3 8HE</div>
+      </div>
+      <div class="ceremony-card" style="border-top-color:var(--burgundy);">
+        <div class="ceremony-card-title">🕓 Schedule</div>
+        <div class="ceremony-card-text">4:30pm — Doors open<br>5:00pm — Mehndi begins<br>7:00pm — Food &amp; music<br>9:00pm — Close</div>
+      </div>
+      <div class="ceremony-card">
+        <div class="ceremony-card-title">👗 Dress Code</div>
+        <div class="ceremony-card-text">Colourful and festive! Wear clothes you don't mind getting a little henna on. Bold colours and sarees welcome.</div>
+      </div>
+      <div class="ceremony-card">
+        <div class="ceremony-card-title">🌿 Mehndi</div>
+        <div class="ceremony-card-text">Professional henna artists will be present. All guests are welcome to get henna — please allow drying time before heading home.</div>
+      </div>
+    </div>
+  </div>
+  <div class="rsvp-section">
+    <div class="section-title">RSVP</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">We'd love to know you're coming</div>
+    <p class="rsvp-note">Please RSVP by Wednesday 27th May 2026.<br>
+      Let us know of any dietary requirements or accessibility needs when you fill in the form.</p>
+    <a href="https://forms.gle/5AsnWxkw5UUN7iGA6" target="_blank" class="btn-rsvp">RSVP Now</a>
+    <p style="font-size:0.72rem;color:rgba(245,237,214,0.25);margin-top:1.25rem;">You'll be taken to a Google Form — it takes under 2 minutes.</p>
+  </div>
+</div>
+
+<!-- ══ HIDDEN: CIVIL ══ -->
+<div id="page-civil" class="page">
+  <div class="hidden-banner"><span>✦ Invited Guests Only · Please do not share this secret code and link ✦</span></div>
+  <div class="section">
+    <div class="section-title">Civil Ceremony</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">Saturday, 27th June 2026 · 11:00am – 3:00pm</div>
+    <p style="font-size:0.875rem;color:var(--text-mid);line-height:1.8;margin-bottom:1.75rem;text-align:center;max-width:520px;margin-left:auto;margin-right:auto;">
+      Our intimate civil ceremony, legally binding our marriage. We are so glad you are here to witness it.
+    </p>
+    <div class="ceremony-cards" style="margin-bottom:2.25rem;">
+      <div class="ceremony-card">
+        <div class="ceremony-card-title">📍 Venue</div>
+        <div class="ceremony-card-text">The Ponsbourne Hotel<br>
+          Newgate Street Village,<br>
+          Hertford,<br>
+          SG13 8QG</div>
+      </div>
+      <div class="ceremony-card" style="border-top-color:var(--burgundy);">
+        <div class="ceremony-card-title">⚠️ Important</div>
+        <div class="ceremony-card-text"><strong>All guests must be seated by 11:30am.</strong><br>The Registrar is booked for 12:00pm sharp. Please arrive with plenty of time to spare.</div>
+      </div>
+    </div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,4vw,1.5rem);color:var(--burgundy);margin-bottom:0.5rem;">Order of the Day</div>
+    <div class="gold-rule" style="margin:0 0 1.5rem;"></div>
+    <div class="day-timeline" style="margin-bottom:2.5rem;">
+      <div class="day-event">
+        <div class="day-time">11:00 am</div>
+        <div class="day-label">Guests Arrive</div>
+        <div class="day-desc">Please aim to arrive between 11:00–11:20am. Tea and coffee will be provided before the ceremony.</div>
+      </div>
+      <div class="day-event highlight-event">
+        <div class="day-time">11:30 am</div>
+        <div class="day-label">All Guests Seated</div>
+        <div class="day-desc">The ceremony room will be closed at this time. Please do not be late!</div>
+      </div>
+      <div class="day-event">
+        <div class="day-time">12:00 pm</div>
+        <div class="day-label">Registrar Commences</div>
+        <div class="day-desc">The legal ceremony begins. Duration approximately 20–30 minutes.</div>
+      </div>
+      <div class="day-event">
+        <div class="day-time">12:30 pm</div>
+        <div class="day-label">Confetti &amp; Congratulations</div>
+        <div class="day-desc">Celebrations outside — confetti provided!</div>
+      </div>
+      <div class="day-event">
+        <div class="day-time">1:00 pm</div>
+        <div class="day-label">Wedding Lunch &amp; Family Photos</div>
+        <div class="day-desc">Lunch is served. Photo slots run simultaneously — see the timetable below.</div>
+      </div>
+      <div class="day-event">
+        <div class="day-time">3:00 pm</div>
+        <div class="day-label">Civil Ceremony Close</div>
+        <div class="day-desc">See you at the reception this evening!</div>
+      </div>
+    </div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,4vw,1.5rem);color:var(--burgundy);margin-bottom:0.5rem;">Family Photo Slots</div>
+    <div class="gold-rule" style="margin:0 0 0.5rem;"></div>
+    <p style="font-size:0.82rem;color:var(--text-light);margin-bottom:1rem;">Each group has a 10-minute slot between 1:30–3:00pm. Lunch is served throughout — please eat before or after your slot.</p>
+    <div class="timetable-wrap">
+      <table class="timetable">
+        <thead><tr><th>Time</th><th>Family / Group</th><th>Notes</th></tr></thead>
+        <tbody id="photo-timetable"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HIDDEN: RECEPTION ══ -->
+<div id="page-reception" class="page">
+  <div class="hidden-banner"><span>✦ Invited Guests Only · Please do not share this secret code and link ✦</span></div>
+  <div class="section">
+    <div class="section-title">Evening Reception</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">Saturday, 27th June 2026 · 6:00pm – Midnight</div>
+    <p style="font-size:0.875rem;color:var(--text-mid);line-height:1.8;margin-bottom:1.75rem;text-align:center;max-width:520px;margin-left:auto;margin-right:auto;">
+      The celebration continues!<br>
+      Join us for an evening of food, music, and dancing to mark the beginning of our life together.
+    </p>
+    <div class="ceremony-cards">
+      <div class="ceremony-card">
+        <div class="ceremony-card-title">📍 Venue</div>
+        <div class="ceremony-card-text">The Ponsbourne Hotel<br>
+          Newgate Street Village,<br>
+          Hertford,<br>
+          SG13 8QG</div>
+      </div>
+      <div class="ceremony-card">
+        <div class="ceremony-card-title">🕕 Schedule</div>
+        <div class="ceremony-card-text">6:00pm — Doors open &amp; welcome drinks<br>7:00pm — Speeches &amp; dinner<br>9:00pm — First dance &amp; dancing<br>Midnight — Carriages</div>
+      </div>
+      <div class="ceremony-card">
+        <div class="ceremony-card-title">👗 Dress Code</div>
+        <div class="ceremony-card-text">Black tie / cocktail attire. Sarees and traditional evening wear very welcome. Smart and celebratory — this is a party!</div>
+      </div>
+      <div class="ceremony-card">
+        <div class="ceremony-card-title">🍽️ Dinner</div>
+        <div class="ceremony-card-text">Traditional Eelam Tamil food will be served.<br>
+          Both meat and vegetarian options will be available.</div>
+      </div>
+    </div>
+    <div style="margin-top:1.75rem;padding:1.25rem 1.5rem;background:var(--gold-pale);border-left:3px solid var(--gold);">
+      <p style="font-size:0.85rem;color:var(--text-mid);line-height:1.7;">🚗 <strong>Getting there:</strong> The Ponsbourne Hotel is easily accessible by car and has complimentary on-site parking available for guests.<br><br>
+        🚂 <strong>Nearest train stations:</strong> <br>
+        <a href="https://maps.app.goo.gl/WGHy9S9ifciax73c8">Cheshunt Railway Station</a> EN8 9AQ – approx. 15–20 minutes by taxi.<br>
+        <a href="https://maps.app.goo.gl/GasgwYeB7iKnGq4CA">Cuffley Railway Station</a> EN6 4HY – approx. 10 minutes by taxi.<br>
+        <a href="https://maps.app.goo.gl/8nasnpgoYnLDjwn39">Bayford Railway Station</a> SG13 8PH – approx. 10 minutes by taxi.<br><br>
+        🏨 <strong>Staying nearby:</strong> For guests wishing to stay overnight, rooms are available at The Ponsbourne Hotel. We recommend booking early to avoid disappointment.<br><br>
+        There are also several nearby hotels:<br>
+        <a href="https://www.travelodge.co.uk/hotels/339/Cheshunt-hotel">Travelodge Cheshunt hotel</a> EN8 8DY (12 min drive)<br>
+        <a href="https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-enfield.html">Premier Inn London Enfield hotel</a> EN3 7XY (17 min drive)</p>
+    </div>
+  </div>
+  <div class="rsvp-section">
+    <div class="section-title">RSVP</div>
+    <div class="gold-rule"></div>
+    <div class="section-subtitle">We'd love to know you're coming</div>
+    <p class="rsvp-note">Please RSVP by Wednesday 27th May 2026.<br>
+      Let us know of any dietary requirements or accessibility needs when you fill in the form.</p>
+    <a href="https://forms.gle/c5MKnyBMJyeEv9mcA" target="_blank" class="btn-rsvp">RSVP Now</a>
+    <p style="font-size:0.72rem;color:rgba(245,237,214,0.25);margin-top:1.25rem;">You'll be taken to a Google Form — it takes under 2 minutes.</p>
+  </div>
+</div>
+
+<footer>
+  <img src="wedding-logo-gold.png" alt="A &amp; A" style="width:80px;height:auto;margin-bottom:0.75rem;opacity:0.7;">
+  <div class="footer-names">Ayngaran & Abinayah</div>
+  <div class="footer-hashtag">#AyngaranAndAbinayah · June 2026</div>
+  <div class="footer-note">Made with love · ayngaranandabinayah.com</div>
+</footer>
+
+<!-- QR code library (tiny, no tracking) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+// ══ CONFIG ══
+var PHOTO_UPLOAD_URL = 'https://forms.gle/tMFuuKy8FgwympVC7';
+
+// Passwords
+var PASSWORDS = {
+  site:       'Kutti=Kunju',
+  ponnurukku: 'A&APonnu2026!',
+  mehndi:     'MehndiAA2026',
+  civil:      'A&A=Civil2026',
+  reception:  'AReception2026A!'
+};
+
+// Secret code → page mapping (what guests type in the top-right bar)
+var SECRET_CODES = {
+  'a&aponnu2026!':    'ponnurukku',
+  'mehndiaa2026':     'mehndi',
+  'a&a=civil2026':    'civil',
+  'areception2026a!': 'reception'
+};
+
+var pendingPage = null;
+var gateContext = 'site';
+
+// ── Persist unlock state across refreshes ──
+var STORAGE_KEY = 'aa_unlocked';
+
+function loadUnlockState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch(e) { return {}; }
+}
+
+function saveUnlockState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+var unlockedPages = loadUnlockState();
+var isUnlocked    = !!unlockedPages.site;
+
+// Restore UI immediately if already unlocked from a previous visit
+if (isUnlocked) {
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('nav-links-list').classList.remove('locked');
+    document.getElementById('hamburger').classList.remove('locked');
+    var ns = document.getElementById('nav-secret');
+    var ms = document.getElementById('mobile-secret');
+    var ps = document.getElementById('photo-section');
+    if (ns) ns.classList.add('visible');
+    if (ms) ms.classList.add('visible');
+    if (ps) ps.style.display = '';
+    var pb = document.getElementById('photo-banner');
+    if (pb) pb.classList.add('visible');
+  });
+}
+
+var EVENT_NAMES = {
+  ponnurukku: 'Ponnurukku',
+  mehndi:     'Mehndi Evening',
+  civil:      'Civil Ceremony',
+  reception:  'Evening Reception'
+};
+
+function openGate(context) {
+  gateContext = context || 'site';
+  var name = EVENT_NAMES[gateContext];
+  document.getElementById('gate-title').textContent    = name ? name : 'Private Event';
+  document.getElementById('gate-subtitle').textContent = name
+    ? 'Ayngaran & Abinayah · ' + name
+    : 'Ayngaran & Abinayah · June 2026';
+  document.getElementById('gate-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(function() { document.getElementById('gate-pw').focus(); }, 300);
+}
+
+function closeGate() {
+  document.getElementById('gate-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('gate-pw').value = '';
+  document.getElementById('gate-error').textContent = '';
+  document.getElementById('gate-pw').classList.remove('error');
+  pendingPage = null;
+}
+
+function submitGate() {
+  var pw    = document.getElementById('gate-pw').value;
+  var input = document.getElementById('gate-pw');
+  var errEl = document.getElementById('gate-error');
+
+  if (pw === PASSWORDS[gateContext]) {
+    if (gateContext === 'site') {
+      isUnlocked = true;
+      unlockedPages.site = true;
+      saveUnlockState(unlockedPages);
+      document.getElementById('nav-links-list').classList.remove('locked');
+      document.getElementById('hamburger').classList.remove('locked');
+      document.getElementById('nav-secret').classList.add('visible');
+      document.getElementById('mobile-secret').classList.add('visible');
+      document.getElementById('photo-section').style.display = '';
+      document.getElementById('photo-banner').classList.add('visible');
+    } else {
+      unlockedPages[gateContext] = true;
+      saveUnlockState(unlockedPages);
+    }
+    document.getElementById('gate-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+    input.value = '';
+    errEl.textContent = '';
+    input.classList.remove('error');
+    var dest = pendingPage || (gateContext === 'site' ? 'story' : gateContext);
+    pendingPage = null;
+    showPage(dest);
+  } else {
+    input.classList.remove('error');
+    void input.offsetWidth;
+    input.classList.add('error');
+    errEl.textContent = 'Incorrect password — please try again.';
+    input.value = '';
+    input.focus();
+  }
+}
+
+function togglePw() {
+  var input = document.getElementById('gate-pw');
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+// Secret code bar — navigates directly to a hidden page
+function goSecret(inputId) {
+  var el  = document.getElementById(inputId);
+  var val = (el.value || '').trim().toLowerCase();
+  var page = SECRET_CODES[val];
+  if (page) {
+    el.value = '';
+    closeMenu();
+    unlockedPages[page] = true;
+    saveUnlockState(unlockedPages);
+    showPage(page);
+  } else {
+    el.classList.remove('error');
+    void el.offsetWidth;
+    el.classList.add('error');
+    setTimeout(function() { el.classList.remove('error'); el.value = ''; }, 1500);
+  }
+}
+
+// ══ NAVIGATION ══
+var NAV_IDS   = ['home','story','wedding','rsvp','faq'];
+var HIDDEN_IDS = ['ponnurukku','mehndi','civil','reception'];
+
+function requireAuth(page) {
+  if (isUnlocked) {
+    showPage(page);
+  } else {
+    pendingPage = page;
+    openGate('site');
+  }
+}
+
+// Navigate to a hidden page, using saved state so no re-entry needed after refresh
+function navHidden(page) {
+  if (unlockedPages[page]) {
+    showPage(page);
+  } else {
+    pendingPage = page;
+    openGate(page);
+  }
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  var pg = document.getElementById('page-' + name);
+  if (pg) pg.classList.add('active');
+  NAV_IDS.forEach(function(id) {
+    var b = document.getElementById('nav-' + id);
+    var m = document.getElementById('mob-' + id);
+    if (b) b.classList.toggle('active', id === name);
+    if (m) m.classList.toggle('active', id === name);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome() { showPage('home'); }
+
+// ══ MOBILE MENU ══
+function toggleMenu() {
+  var menu = document.getElementById('mobile-menu');
+  var ham  = document.getElementById('hamburger');
+  var open = menu.classList.toggle('open');
+  ham.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+function closeMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close gate on backdrop click
+document.getElementById('gate-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeGate();
+});
+
+// ══ COUNTDOWN ══
+function updateCountdown() {
+  var target = new Date('2026-06-24T09:00:00+01:00');
+  var diff   = target - new Date();
+  if (diff <= 0) {
+    ['cd-days','cd-hours','cd-mins'].forEach(function(id) { document.getElementById(id).textContent = '0'; });
+    return;
+  }
+  document.getElementById('cd-days').textContent  = Math.floor(diff / 86400000);
+  document.getElementById('cd-hours').textContent = Math.floor((diff % 86400000) / 3600000);
+  document.getElementById('cd-mins').textContent  = Math.floor((diff % 3600000) / 60000);
+}
+updateCountdown();
+setInterval(updateCountdown, 30000);
+
+// ══ PHOTO TIMETABLE ══
+var photoSlots = [
+  { time: '1:30 pm', group: 'Bride & Groom only',           notes: 'Formal couple portraits',    highlight: true },
+  { time: '1:40 pm', group: "Immediate family — Bride's side", notes: 'Parents & siblings' },
+  { time: '1:50 pm', group: "Immediate family — Groom's side", notes: 'Parents & siblings' },
+  { time: '2:00 pm', group: 'Both families together',        notes: 'Full family group shot' },
+  { time: '2:10 pm', group: 'Grandparents',                  notes: 'Bride & Groom with grandparents' },
+  { time: '2:20 pm', group: "Extended family — Bride's side", notes: 'Aunts, uncles, cousins' },
+  { time: '2:30 pm', group: "Extended family — Groom's side", notes: 'Aunts, uncles, cousins' },
+  { time: '2:40 pm', group: 'Bridal party',                  notes: 'Bridesmaids & groomsmen' },
+  { time: '2:50 pm', group: 'Close friends',                 notes: '[Names TBC]' },
+];
+
+var tbody = document.getElementById('photo-timetable');
+photoSlots.forEach(function(s) {
+  var tr = document.createElement('tr');
+  if (s.highlight) tr.classList.add('highlight');
+  tr.innerHTML = '<td class="time-col">' + s.time + '</td><td>' + s.group + '</td><td style="color:var(--text-light);font-size:0.78rem;">' + s.notes + '</td>';
+  tbody.appendChild(tr);
+});
+var lunchTr = document.createElement('tr');
+lunchTr.innerHTML = '<td class="time-col" style="color:var(--text-light);">Throughout</td><td style="color:var(--text-light);font-style:italic;">Lunch served</td><td style="color:var(--text-light);font-size:0.78rem;">Eat before/after your slot</td>';
+tbody.appendChild(lunchTr);
+
+// ══ QR CODE ══
+// Updates the QR code and upload link whenever PHOTO_UPLOAD_URL is set
+(function() {
+  var url = PHOTO_UPLOAD_URL;
+  if (!url || url === 'https://forms.gle/B7J2aJoyZDLmVKEx7') {
+    // Show placeholder text until URL is configured
+    var canvas = document.getElementById('qr-canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#f5f5f0';
+    ctx.fillRect(0, 0, 180, 180);
+    ctx.fillStyle = '#8A6A5A';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('QR code will appear', 90, 82);
+    ctx.fillText('once upload URL is set', 90, 100);
+    return;
+  }
+  // Set the upload button href
+  document.getElementById('upload-link').href = url;
+  // Generate QR code into canvas
+  try {
+    new QRCode(document.getElementById('qr-canvas').parentElement, {
+      text: url,
+      width: 180,
+      height: 180,
+      colorDark: '#2A1A10',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+    // Remove the placeholder canvas since QRCode lib creates its own
+    var oldCanvas = document.getElementById('qr-canvas');
+    if (oldCanvas) oldCanvas.remove();
+  } catch(e) {
+    console.log('QR generation error:', e);
+  }
+})();
+</script>
+</body>
+</html>
