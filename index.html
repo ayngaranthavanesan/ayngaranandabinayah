@@ -889,17 +889,21 @@
     display: none;
     width: 100%;
     background: var(--burgundy-dark);
-    border-top: 1px solid rgba(201,168,76,0.3);
-    border-bottom: 1px solid rgba(201,168,76,0.3);
-    height: 320px;
+    height: 220px;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
   }
 
-  @media (max-width: 640px) { .photo-banner { height: 220px; } }
-  @media (max-width: 400px)  { .photo-banner { height: 180px; } }
-
   .photo-banner.visible { display: block; }
+
+  /* On desktop the two banners wrap the hero — handled by .home-desktop-wrap */
+  @media (min-width: 860px) {
+    .photo-banner { height: 260px; }
+    .photo-banner.visible { display: block; }
+  }
+
+  @media (max-width: 500px) { .photo-banner { height: 180px; } }
 
   .photo-banner-track {
     display: flex;
@@ -915,7 +919,25 @@
     object-fit: cover;
     flex-shrink: 0;
     display: block;
-    position: relative;
+  }
+
+  /* Desktop wrap: banner top, hero, banner bottom — all inside the gradient */
+  .home-desktop-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100svh - var(--nav-h));
+    background: linear-gradient(160deg, var(--burgundy-dark) 0%, var(--burgundy) 55%, var(--emerald) 100%);
+  }
+
+  /* Hero shrinks to just its content on desktop when flanked by banners */
+  @media (min-width: 860px) {
+    .home-desktop-wrap .hero {
+      min-height: 0;
+      flex: 1;
+      background: transparent;
+    }
+    /* Remove the hero's own background gradient since wrapper provides it */
+    .home-desktop-wrap .hero::before { display: none; }
   }
 
   /* Placeholder tile shown before real images are added */
@@ -1067,44 +1089,54 @@
 
 <!-- ══ HOME ══ -->
 <div id="page-home" class="page active">
-  <div class="hero">
-    <img src="wedding-logo-gold.png" alt="A &amp; A" style="width:min(260px,55vw);height:auto;margin-bottom:1rem;filter:drop-shadow(0 2px 12px rgba(201,168,76,0.25));position:relative;z-index:1;">
-    <div class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
-    <div class="hero-names">
-      Ayngaran
-      <span class="hero-ampersand">&</span>
-      Abinayah
-    </div>
-    <div class="hero-divider"></div>
-    <div class="hero-date">Wednesday 24th June 2026 · London, England</div>
-    <p class="hero-tagline" style="margin-top:1.2rem;">"Two souls, one sacred bond — united through love, family, and tradition."</p>
-    <div class="countdown-grid">
-      <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-label">Days</span></div>
-      <div class="countdown-sep">:</div>
-      <div class="countdown-unit"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-label">Hours</span></div>
-      <div class="countdown-sep">:</div>
-      <div class="countdown-unit"><span class="countdown-num" id="cd-mins">--</span><span class="countdown-label">Mins</span></div>
-    </div>
-    <button class="btn-primary" onclick="openGate('site')">View Ceremony Details</button>
-  </div>
+  <div class="home-desktop-wrap">
 
-  <!-- PHOTO BANNER — scrolling images, only visible after password entered -->
-  <!--
-    HOW TO ADD YOUR PHOTOS:
-    Replace each <div class="banner-placeholder"> with an <img> tag, e.g.:
-    <img src="photo1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-    Upload your images alongside this HTML file on Netlify.
-    The track is duplicated so the scroll loops seamlessly.
-  -->
-  <div class="photo-banner" id="photo-banner">
-    <div class="photo-banner-track" id="banner-track">
-      <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+    <!-- Top banner (scrolls left → right) -->
+    <div class="photo-banner" id="photo-banner">
+      <div class="photo-banner-track" id="banner-track">
+        <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      </div>
     </div>
+
+    <!-- Hero text -->
+    <div class="hero">
+      <img src="wedding-logo-gold.png" alt="A &amp; A" style="width:min(260px,55vw);height:auto;margin-bottom:1rem;filter:drop-shadow(0 2px 12px rgba(201,168,76,0.25));position:relative;z-index:1;">
+      <div class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+      <div class="hero-names">
+        Ayngaran
+        <span class="hero-ampersand">&</span>
+        Abinayah
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-date">Wednesday 24th June 2026 · London, England</div>
+      <p class="hero-tagline" style="margin-top:1.2rem;">"Two souls, one sacred bond — united through love, family, and tradition."</p>
+      <div class="countdown-grid">
+        <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-label">Days</span></div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-label">Hours</span></div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit"><span class="countdown-num" id="cd-mins">--</span><span class="countdown-label">Mins</span></div>
+      </div>
+      <button class="btn-primary" onclick="openGate('site')">View Ceremony Details</button>
+    </div>
+
+    <!-- Bottom banner (scrolls right → left, reverse) -->
+    <div class="photo-banner" id="photo-banner-bottom">
+      <div class="photo-banner-track" id="banner-track-bottom">
+        <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+        <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      </div>
+    </div>
+
   </div>
 
   <!-- PHOTO UPLOAD SECTION — only visible after password entered -->
@@ -1862,33 +1894,25 @@ tbody.appendChild(lunchTr);
   }
 })();
 
-// ── BANNER: pure marquee using CSS margin-left ──
-// Appends enough clones to fill 3x screen width so there is ALWAYS
-// content visible regardless of image sizes. Scrolls by moving
-// margin-left on the track — no transform, no measurement needed.
+// ── BANNER ──
 function showBanner() {
-  var banner = document.getElementById('photo-banner');
+  startBannerScroller('photo-banner',        'banner-track',        1);
+  startBannerScroller('photo-banner-bottom', 'banner-track-bottom', -1);
+}
+
+function startBannerScroller(bannerId, trackId, direction) {
+  var banner = document.getElementById(bannerId);
   if (!banner || banner._init) return;
   banner._init = true;
   banner.classList.add('visible');
 
-  var track = document.getElementById('banner-track');
+  var track = document.getElementById(trackId);
   if (!track) return;
 
-  // Clone images until track is wide enough to never show a gap
-  // We clone 5 full sets (30 images total) — guaranteed to fill any screen
   var origImgs = Array.prototype.slice.call(track.querySelectorAll('img'));
-  for (var s = 0; s < 5; s++) {
-    origImgs.forEach(function(img) {
-      track.appendChild(img.cloneNode(true));
-    });
-  }
-
-  // Wait for images to render before scrolling
-  var ready = false;
-  var totalImgs = Array.prototype.slice.call(track.querySelectorAll('img'));
   var loaded = 0;
-  totalImgs.forEach(function(img) {
+
+  origImgs.forEach(function(img) {
     if (img.complete && img.naturalWidth > 0) { loaded++; }
     else {
       img.addEventListener('load',  function() { loaded++; });
@@ -1896,29 +1920,28 @@ function showBanner() {
     }
   });
 
-  // Double rAF after images load to guarantee layout is complete
   function waitReady() {
-    if (loaded < totalImgs.length) { requestAnimationFrame(waitReady); return; }
     requestAnimationFrame(function() {
-      requestAnimationFrame(startScroll);
+      if (loaded < origImgs.length) { waitReady(); return; }
+      requestAnimationFrame(function() { startScroll(); });
     });
   }
   waitReady();
 
   function startScroll() {
-    // Measure one original set width — sum of first 6 image offsetWidths + gaps
-    var gap = 0;
     var oneSetW = 0;
-    for (var i = 0; i < origImgs.length; i++) {
-      oneSetW += origImgs[i].offsetWidth + gap;
-    }
+    for (var i = 0; i < origImgs.length; i++) { oneSetW += origImgs[i].offsetWidth; }
     oneSetW = Math.round(oneSetW);
     if (oneSetW <= 0) { requestAnimationFrame(startScroll); return; }
 
+    for (var s = 0; s < 5; s++) {
+      origImgs.forEach(function(img) { track.appendChild(img.cloneNode(true)); });
+    }
+
     var x = 0;
     var paused = false;
-    var speed = 0.7; // px per frame
     var acc = 0;
+    var speed = 0.7;
 
     banner.addEventListener('mouseenter', function() { paused = true; });
     banner.addEventListener('mouseleave', function() { paused = false; });
@@ -1932,9 +1955,9 @@ function showBanner() {
         if (move >= 1) {
           acc -= move;
           x += move;
-          // Wrap using modulo against ONE set width — seamless every time
           x = x % oneSetW;
-          track.style.marginLeft = '-' + x + 'px';
+          track.style.marginLeft = (direction > 0 ? '-' : '') +
+            (direction > 0 ? x : oneSetW - x) + 'px';
         }
       }
       requestAnimationFrame(tick);
