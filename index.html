@@ -904,7 +904,7 @@
     display: flex;
     gap: 12px;
     height: 100%;
-    animation: bannerScroll 60s linear infinite;
+    animation: bannerScroll 40s linear infinite;
     width: max-content;
   }
 
@@ -912,8 +912,6 @@
 
   @keyframes bannerScroll {
     0%   { transform: translateX(0); }
-    100% { transform: translateX(-25%); }
-  }
     100% { transform: translateX(-50%); }
   }
 
@@ -1038,7 +1036,6 @@
     <li><button onclick="showPage('home')" id="nav-home" class="active">Home</button></li>
     <li><button onclick="requireAuth('story')" id="nav-story">Our Story</button></li>
     <li><button onclick="requireAuth('wedding')" id="nav-wedding">The Wedding</button></li>
-    <li><button onclick="requireAuth('rsvp')" id="nav-rsvp">RSVP</button></li>
     <li><button onclick="requireAuth('faq')" id="nav-faq">FAQ</button></li>
   </ul>
 
@@ -1060,7 +1057,6 @@
   <button onclick="showPage('home');closeMenu()" id="mob-home" class="active">Home</button>
   <button onclick="requireAuth('story');closeMenu()" id="mob-story">Our Story</button>
   <button onclick="requireAuth('wedding');closeMenu()" id="mob-wedding">The Wedding</button>
-  <button onclick="requireAuth('rsvp');closeMenu()" id="mob-rsvp">RSVP</button>
   <button onclick="requireAuth('faq');closeMenu()" id="mob-faq">FAQ</button>
   <!-- Secret code section — revealed after main site unlock -->
   <div class="mobile-secret" id="mobile-secret">
@@ -1107,31 +1103,21 @@
   -->
   <div class="photo-banner" id="photo-banner">
     <div class="photo-banner-track" id="banner-track">
-            <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <!-- Original set -->
+      <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-            <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <!-- Duplicate set for seamless loop -->
+      <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-            <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-            <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-</div>
+    </div>
   </div>
 
   <!-- PHOTO UPLOAD SECTION — only visible after password entered -->
@@ -1348,26 +1334,16 @@ For wherever you are… is where I stand.</div>
       </div> -->
     </div>
   </div>
-</div>
 
-<!-- ══ RSVP ══ -->
-<div id="page-rsvp" class="page">
-  <div class="rsvp-section">
-    <div class="section-title">RSVP</div>
-    <div class="gold-rule"></div>
-    <div class="section-subtitle">We'd love to know you're coming</div>
-    <p class="rsvp-note">Please RSVP by Wednesday 27th May 2026.<br>
-      Let us know of any dietary requirements or accessibility needs when you fill in the form.</p>
-    <a href="https://forms.gle/tffWBGvcSuBwyhui6" target="_blank" class="btn-rsvp">RSVP Now</a>
-    <p style="font-size:0.72rem;color:rgba(245,237,214,0.25);margin-top:1.25rem;">You'll be taken to a Google Form — it takes under 2 minutes.</p>
-  </div>
-  <div class="section" style="padding-top:2.5rem;">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,5vw,1.8rem);color:var(--burgundy);text-align:center;margin-bottom:0.5rem;">Accommodation &amp; Travel</div>
-    <div class="gold-rule"></div>
-    <div class="section-subtitle">We want your stay to be as easy as possible</div>
-    <p style="font-size:0.875rem;color:var(--text-mid);line-height:1.8;text-align:center;">Ample parking is available at Meridian Grand.<br>
-      <a href="https://www.premierinn.com/gb/en/hotels/england/greater-london/london/london-edmonton.html">Premier Inn London Edmonton hotel</a> is less than a 10-minute walk from Meridian Grand.</p>
-  </div>
+  <div class="rsvp-section" id="tamil-wedding-rsvp">
+  <div class="section-title">RSVP for Tamil Wedding</div>
+  <div class="gold-rule"></div>
+  <div class="section-subtitle">We'd love to know you're coming</div>
+  <p class="rsvp-note">Please RSVP by Wednesday 27th May 2026.<br>
+    Let us know of any dietary requirements or accessibility needs when you fill in the form.</p>
+  <a href="https://forms.gle/tffWBGvcSuBwyhui6" target="_blank" class="btn-rsvp">RSVP for Tamil Wedding</a>
+  <p style="font-size:0.72rem;color:rgba(245,237,214,0.25);margin-top:1.25rem;">You'll be taken to a Google Form — it takes under 2 minutes.</p>
+</div>
 </div>
 
 <!-- ══ FAQ ══ -->
@@ -1476,12 +1452,12 @@ For wherever you are… is where I stand.</div>
     </div>
   </div>
   <div class="rsvp-section">
-    <div class="section-title">RSVP</div>
+    <div class="section-title">RSVP for Mehndi</div>
     <div class="gold-rule"></div>
     <div class="section-subtitle">We'd love to know you're coming</div>
     <p class="rsvp-note">Please RSVP by Wednesday 27th May 2026.<br>
       Let us know of any dietary requirements or accessibility needs when you fill in the form.</p>
-    <a href="https://forms.gle/5AsnWxkw5UUN7iGA6" target="_blank" class="btn-rsvp">RSVP Now</a>
+    <a href="https://forms.gle/5AsnWxkw5UUN7iGA6" target="_blank" class="btn-rsvp">RSVP for Mehndi</a>
     <p style="font-size:0.72rem;color:rgba(245,237,214,0.25);margin-top:1.25rem;">You'll be taken to a Google Form — it takes under 2 minutes.</p>
   </div>
 </div>
@@ -1601,12 +1577,12 @@ For wherever you are… is where I stand.</div>
     </div>
   </div>
   <div class="rsvp-section">
-    <div class="section-title">RSVP</div>
+    <div class="section-title">RSVP for Reception</div>
     <div class="gold-rule"></div>
     <div class="section-subtitle">We'd love to know you're coming</div>
     <p class="rsvp-note">Please RSVP by Wednesday 27th May 2026.<br>
       Let us know of any dietary requirements or accessibility needs when you fill in the form.</p>
-    <a href="https://forms.gle/c5MKnyBMJyeEv9mcA" target="_blank" class="btn-rsvp">RSVP Now</a>
+    <a href="https://forms.gle/c5MKnyBMJyeEv9mcA" target="_blank" class="btn-rsvp">RSVP for Reception</a>
     <p style="font-size:0.72rem;color:rgba(245,237,214,0.25);margin-top:1.25rem;">You'll be taken to a Google Form — it takes under 2 minutes.</p>
   </div>
 </div>
