@@ -521,66 +521,6 @@
     overflow: hidden;
   }
 
-  /* ── DESKTOP HERO: vertical photo strips either side ── */
-  @media (min-width: 900px) {
-    .hero {
-      flex-direction: row;
-      padding: 0;
-      align-items: stretch;
-    }
-
-    .hero-centre {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 3rem 2rem;
-      text-align: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero-strip {
-      flex: 0 0 220px;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    .hero-strip.ready { opacity: 1; }
-
-    .hero-strip-track {
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-    }
-
-    .hero-strip-track img {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-      flex-shrink: 0;
-    }
-  }
-
-  @media (max-width: 899px) {
-    .hero-strip { display: none; }
-    .hero-centre {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-    }
-  }
-
   .hero::before {
     content: '';
     position: absolute;
@@ -1128,47 +1068,24 @@
 <!-- ══ HOME ══ -->
 <div id="page-home" class="page active">
   <div class="hero">
-
-    <!-- Left vertical strip (desktop only) -->
-    <div class="hero-strip" id="hero-strip-left">
-      <div class="hero-strip-track" id="strip-track-left">
-        <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah">
-        <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah">
-        <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah">
-      </div>
+    <img src="wedding-logo-gold.png" alt="A &amp; A" style="width:min(260px,55vw);height:auto;margin-bottom:1rem;filter:drop-shadow(0 2px 12px rgba(201,168,76,0.25));position:relative;z-index:1;">
+    <div class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="hero-names">
+      Ayngaran
+      <span class="hero-ampersand">&</span>
+      Abinayah
     </div>
-
-    <!-- Centre content -->
-    <div class="hero-centre">
-      <img src="wedding-logo-gold.png" alt="A &amp; A" style="width:min(220px,40vw);height:auto;margin-bottom:1rem;filter:drop-shadow(0 2px 12px rgba(201,168,76,0.25));position:relative;z-index:1;">
-      <div class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
-      <div class="hero-names">
-        Ayngaran
-        <span class="hero-ampersand">&</span>
-        Abinayah
-      </div>
-      <div class="hero-divider"></div>
-      <div class="hero-date">Wednesday 24th June 2026 · London, England</div>
-      <p class="hero-tagline" style="margin-top:1.2rem;">"Two souls, one sacred bond — united through love, family, and tradition."</p>
-      <div class="countdown-grid">
-        <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-label">Days</span></div>
-        <div class="countdown-sep">:</div>
-        <div class="countdown-unit"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-label">Hours</span></div>
-        <div class="countdown-sep">:</div>
-        <div class="countdown-unit"><span class="countdown-num" id="cd-mins">--</span><span class="countdown-label">Mins</span></div>
-      </div>
-      <button class="btn-primary" onclick="openGate('site')">View Ceremony Details</button>
+    <div class="hero-divider"></div>
+    <div class="hero-date">Wednesday 24th June 2026 · London, England</div>
+    <p class="hero-tagline" style="margin-top:1.2rem;">"Two souls, one sacred bond — united through love, family, and tradition."</p>
+    <div class="countdown-grid">
+      <div class="countdown-unit"><span class="countdown-num" id="cd-days">--</span><span class="countdown-label">Days</span></div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-unit"><span class="countdown-num" id="cd-hours">--</span><span class="countdown-label">Hours</span></div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-unit"><span class="countdown-num" id="cd-mins">--</span><span class="countdown-label">Mins</span></div>
     </div>
-
-    <!-- Right vertical strip (desktop only) -->
-    <div class="hero-strip" id="hero-strip-right">
-      <div class="hero-strip-track" id="strip-track-right">
-        <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah">
-        <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah">
-        <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah">
-      </div>
-    </div>
-
+    <button class="btn-primary" onclick="openGate('site')">View Ceremony Details</button>
   </div>
 
   <!-- PHOTO BANNER — scrolling images, only visible after password entered -->
@@ -2032,68 +1949,6 @@ if (isUnlocked) {
     showBanner();
   }
 }
-
-// ── VERTICAL HERO STRIPS (desktop only) ──
-function initStrip(stripId, trackId, direction) {
-  var strip = document.getElementById(stripId);
-  var track = document.getElementById(trackId);
-  if (!strip || !track) return;
-  if (window.innerWidth < 900) return;
-
-  var imgs = Array.prototype.slice.call(track.querySelectorAll('img'));
-  var loaded = 0;
-
-  imgs.forEach(function(img) {
-    if (img.complete && img.naturalWidth > 0) { loaded++; }
-    else {
-      img.addEventListener('load',  function() { loaded++; });
-      img.addEventListener('error', function() { loaded++; });
-    }
-  });
-
-  function waitReady() {
-    if (loaded < imgs.length) { requestAnimationFrame(waitReady); return; }
-    requestAnimationFrame(function() {
-      requestAnimationFrame(function() { startStrip(); });
-    });
-  }
-  waitReady();
-
-  function startStrip() {
-    // Measure one set height
-    var setH = 0;
-    imgs.forEach(function(img) { setH += img.offsetHeight; });
-    setH = Math.round(setH);
-    if (setH <= 0) { requestAnimationFrame(startStrip); return; }
-
-    // Clone images to fill 2x height for seamless loop
-    imgs.forEach(function(img) { track.appendChild(img.cloneNode(true)); });
-
-    strip.classList.add('ready');
-
-    var y = 0;
-    var acc = 0;
-    var speed = 0.4;
-    var dir = (direction === 'up') ? 1 : -1;
-
-    (function tick() {
-      acc += speed;
-      var move = Math.floor(acc);
-      if (move >= 1) {
-        acc -= move;
-        y += move * dir;
-        y = ((y % setH) + setH) % setH; // handles both up and down, never negative
-        track.style.transform = 'translateY(-' + y + 'px)';
-      }
-      requestAnimationFrame(tick);
-    }());
-  }
-}
-
-// Init both strips — left scrolls up, right scrolls down for visual interest
-initStrip('hero-strip-left',  'strip-track-left',  'up');
-initStrip('hero-strip-right', 'strip-track-right', 'down');
-
 </script>
 </body>
 </html>
