@@ -884,35 +884,29 @@
     .countdown-grid { gap: 0.75rem; }
     .countdown-sep { display: none; }
   }
-  /* ── PHOTO BANNER (scrolling, hidden until unlocked) ── */
+  /* ── PHOTO BANNER ── */
   .photo-banner {
     display: none;
     width: 100%;
-    overflow: hidden;
     background: var(--burgundy-dark);
     border-top: 1px solid rgba(201,168,76,0.3);
     border-bottom: 1px solid rgba(201,168,76,0.3);
-    position: relative;
     height: 320px;
+    position: relative;
+    overflow: hidden;
   }
 
   @media (max-width: 640px) { .photo-banner { height: 220px; } }
+  @media (max-width: 400px)  { .photo-banner { height: 180px; } }
 
   .photo-banner.visible { display: block; }
 
   .photo-banner-track {
     display: flex;
-    gap: 12px;
+    position: absolute;
+    top: 0; left: 0;
     height: 100%;
-    animation: bannerScroll 40s linear infinite;
-    width: max-content;
-  }
-
-  .photo-banner:hover .photo-banner-track { animation-play-state: paused; }
-
-  @keyframes bannerScroll {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    gap: 8px;
   }
 
   .banner-img {
@@ -921,6 +915,7 @@
     object-fit: cover;
     flex-shrink: 0;
     display: block;
+    position: relative;
   }
 
   /* Placeholder tile shown before real images are added */
@@ -1103,14 +1098,6 @@
   -->
   <div class="photo-banner" id="photo-banner">
     <div class="photo-banner-track" id="banner-track">
-      <!-- Original set -->
-      <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-      <!-- Duplicate set for seamless loop -->
       <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
       <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
@@ -1647,8 +1634,7 @@ if (isUnlocked) {
     if (ns) ns.classList.add('visible');
     if (ms) ms.classList.add('visible');
     if (ps) ps.style.display = '';
-    var pb = document.getElementById('photo-banner');
-    if (pb) pb.classList.add('visible');
+    showBanner();
   });
 }
 
@@ -1695,7 +1681,7 @@ function submitGate() {
       document.getElementById('nav-secret').classList.add('visible');
       document.getElementById('mobile-secret').classList.add('visible');
       document.getElementById('photo-section').style.display = '';
-      document.getElementById('photo-banner').classList.add('visible');
+      showBanner();
     } else {
       unlockedPages[gateContext] = true;
       saveUnlockState(unlockedPages);
@@ -1875,6 +1861,94 @@ tbody.appendChild(lunchTr);
     console.log('QR generation error:', e);
   }
 })();
+
+// ── BANNER: pure marquee using CSS margin-left ──
+// Appends enough clones to fill 3x screen width so there is ALWAYS
+// content visible regardless of image sizes. Scrolls by moving
+// margin-left on the track — no transform, no measurement needed.
+function showBanner() {
+  var banner = document.getElementById('photo-banner');
+  if (!banner || banner._init) return;
+  banner._init = true;
+  banner.classList.add('visible');
+
+  var track = document.getElementById('banner-track');
+  if (!track) return;
+
+  // Clone images until track is wide enough to never show a gap
+  // We clone 5 full sets (30 images total) — guaranteed to fill any screen
+  var origImgs = Array.prototype.slice.call(track.querySelectorAll('img'));
+  for (var s = 0; s < 5; s++) {
+    origImgs.forEach(function(img) {
+      track.appendChild(img.cloneNode(true));
+    });
+  }
+
+  // Wait for images to render before scrolling
+  var ready = false;
+  var totalImgs = Array.prototype.slice.call(track.querySelectorAll('img'));
+  var loaded = 0;
+  totalImgs.forEach(function(img) {
+    if (img.complete && img.naturalWidth > 0) { loaded++; }
+    else {
+      img.addEventListener('load',  function() { loaded++; });
+      img.addEventListener('error', function() { loaded++; });
+    }
+  });
+
+  // Double rAF after images load to guarantee layout is complete
+  function waitReady() {
+    if (loaded < totalImgs.length) { requestAnimationFrame(waitReady); return; }
+    requestAnimationFrame(function() {
+      requestAnimationFrame(startScroll);
+    });
+  }
+  waitReady();
+
+  function startScroll() {
+    // Measure one original set width — sum of first 6 image offsetWidths + gaps
+    var gap = 8;
+    var oneSetW = 0;
+    for (var i = 0; i < origImgs.length; i++) {
+      oneSetW += origImgs[i].offsetWidth + gap;
+    }
+    oneSetW = Math.round(oneSetW);
+    if (oneSetW <= 0) { requestAnimationFrame(startScroll); return; }
+
+    var x = 0;
+    var paused = false;
+    var speed = 0.7; // px per frame
+    var acc = 0;
+
+    banner.addEventListener('mouseenter', function() { paused = true; });
+    banner.addEventListener('mouseleave', function() { paused = false; });
+    banner.addEventListener('touchstart', function() { paused = true; }, { passive: true });
+    banner.addEventListener('touchend',   function() { paused = false; });
+
+    (function tick() {
+      if (!paused) {
+        acc += speed;
+        var move = Math.floor(acc);
+        if (move >= 1) {
+          acc -= move;
+          x += move;
+          // Wrap using modulo against ONE set width — seamless every time
+          x = x % oneSetW;
+          track.style.marginLeft = '-' + x + 'px';
+        }
+      }
+      requestAnimationFrame(tick);
+    }());
+  }
+}
+
+if (isUnlocked) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', showBanner);
+  } else {
+    showBanner();
+  }
+}
 </script>
 </body>
 </html>
