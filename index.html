@@ -521,6 +521,66 @@
     overflow: hidden;
   }
 
+  /* ── DESKTOP HERO: vertical photo strips either side ── */
+  @media (min-width: 900px) {
+    .hero {
+      flex-direction: row;
+      padding: 0;
+      align-items: stretch;
+    }
+
+    .hero-centre {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-strip {
+      flex: 0 0 220px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .hero-strip.ready { opacity: 1; }
+
+    .hero-strip-track {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+
+    .hero-strip-track img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      flex-shrink: 0;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .hero-strip { display: none; }
+    .hero-centre {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+  }
+
   .hero::before {
     content: '';
     position: absolute;
@@ -889,21 +949,17 @@
     display: none;
     width: 100%;
     background: var(--burgundy-dark);
-    height: 220px;
+    border-top: 1px solid rgba(201,168,76,0.3);
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    height: 320px;
     position: relative;
     overflow: hidden;
-    flex-shrink: 0;
   }
+
+  @media (max-width: 640px) { .photo-banner { height: 220px; } }
+  @media (max-width: 400px)  { .photo-banner { height: 180px; } }
 
   .photo-banner.visible { display: block; }
-
-  /* On desktop the two banners wrap the hero — handled by .home-desktop-wrap */
-  @media (min-width: 860px) {
-    .photo-banner { height: 260px; }
-    .photo-banner.visible { display: block; }
-  }
-
-  @media (max-width: 500px) { .photo-banner { height: 180px; } }
 
   .photo-banner-track {
     display: flex;
@@ -919,25 +975,7 @@
     object-fit: cover;
     flex-shrink: 0;
     display: block;
-  }
-
-  /* Desktop wrap: banner top, hero, banner bottom — all inside the gradient */
-  .home-desktop-wrap {
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100svh - var(--nav-h));
-    background: linear-gradient(160deg, var(--burgundy-dark) 0%, var(--burgundy) 55%, var(--emerald) 100%);
-  }
-
-  /* Hero shrinks to just its content on desktop when flanked by banners */
-  @media (min-width: 860px) {
-    .home-desktop-wrap .hero {
-      min-height: 0;
-      flex: 1;
-      background: transparent;
-    }
-    /* Remove the hero's own background gradient since wrapper provides it */
-    .home-desktop-wrap .hero::before { display: none; }
+    position: relative;
   }
 
   /* Placeholder tile shown before real images are added */
@@ -1089,23 +1127,20 @@
 
 <!-- ══ HOME ══ -->
 <div id="page-home" class="page active">
-  <div class="home-desktop-wrap">
+  <div class="hero">
 
-    <!-- Top banner (scrolls left → right) -->
-    <div class="photo-banner" id="photo-banner">
-      <div class="photo-banner-track" id="banner-track">
-        <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+    <!-- Left vertical strip (desktop only) -->
+    <div class="hero-strip" id="hero-strip-left">
+      <div class="hero-strip-track" id="strip-track-left">
+        <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah">
+        <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah">
+        <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah">
       </div>
     </div>
 
-    <!-- Hero text -->
-    <div class="hero">
-      <img src="wedding-logo-gold.png" alt="A &amp; A" style="width:min(260px,55vw);height:auto;margin-bottom:1rem;filter:drop-shadow(0 2px 12px rgba(201,168,76,0.25));position:relative;z-index:1;">
+    <!-- Centre content -->
+    <div class="hero-centre">
+      <img src="wedding-logo-gold.png" alt="A &amp; A" style="width:min(220px,40vw);height:auto;margin-bottom:1rem;filter:drop-shadow(0 2px 12px rgba(201,168,76,0.25));position:relative;z-index:1;">
       <div class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
       <div class="hero-names">
         Ayngaran
@@ -1125,18 +1160,34 @@
       <button class="btn-primary" onclick="openGate('site')">View Ceremony Details</button>
     </div>
 
-    <!-- Bottom banner (scrolls right → left, reverse) -->
-    <div class="photo-banner" id="photo-banner-bottom">
-      <div class="photo-banner-track" id="banner-track-bottom">
-        <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
-        <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+    <!-- Right vertical strip (desktop only) -->
+    <div class="hero-strip" id="hero-strip-right">
+      <div class="hero-strip-track" id="strip-track-right">
+        <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah">
+        <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah">
+        <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah">
       </div>
     </div>
 
+  </div>
+
+  <!-- PHOTO BANNER — scrolling images, only visible after password entered -->
+  <!--
+    HOW TO ADD YOUR PHOTOS:
+    Replace each <div class="banner-placeholder"> with an <img> tag, e.g.:
+    <img src="photo1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+    Upload your images alongside this HTML file on Netlify.
+    The track is duplicated so the scroll loops seamlessly.
+  -->
+  <div class="photo-banner" id="photo-banner">
+    <div class="photo-banner-track" id="banner-track">
+      <img src="banner-photo-1.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-2.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-3.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-4.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-5.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+      <img src="banner-photo-6.jpg" alt="Ayngaran and Abinayah" class="banner-img">
+    </div>
   </div>
 
   <!-- PHOTO UPLOAD SECTION — only visible after password entered -->
@@ -1894,25 +1945,33 @@ tbody.appendChild(lunchTr);
   }
 })();
 
-// ── BANNER ──
+// ── BANNER: pure marquee using CSS margin-left ──
+// Appends enough clones to fill 3x screen width so there is ALWAYS
+// content visible regardless of image sizes. Scrolls by moving
+// margin-left on the track — no transform, no measurement needed.
 function showBanner() {
-  startBannerScroller('photo-banner',        'banner-track',        1);
-  startBannerScroller('photo-banner-bottom', 'banner-track-bottom', -1);
-}
-
-function startBannerScroller(bannerId, trackId, direction) {
-  var banner = document.getElementById(bannerId);
+  var banner = document.getElementById('photo-banner');
   if (!banner || banner._init) return;
   banner._init = true;
   banner.classList.add('visible');
 
-  var track = document.getElementById(trackId);
+  var track = document.getElementById('banner-track');
   if (!track) return;
 
+  // Clone images until track is wide enough to never show a gap
+  // We clone 5 full sets (30 images total) — guaranteed to fill any screen
   var origImgs = Array.prototype.slice.call(track.querySelectorAll('img'));
-  var loaded = 0;
+  for (var s = 0; s < 5; s++) {
+    origImgs.forEach(function(img) {
+      track.appendChild(img.cloneNode(true));
+    });
+  }
 
-  origImgs.forEach(function(img) {
+  // Wait for images to render before scrolling
+  var ready = false;
+  var totalImgs = Array.prototype.slice.call(track.querySelectorAll('img'));
+  var loaded = 0;
+  totalImgs.forEach(function(img) {
     if (img.complete && img.naturalWidth > 0) { loaded++; }
     else {
       img.addEventListener('load',  function() { loaded++; });
@@ -1920,28 +1979,29 @@ function startBannerScroller(bannerId, trackId, direction) {
     }
   });
 
+  // Double rAF after images load to guarantee layout is complete
   function waitReady() {
+    if (loaded < totalImgs.length) { requestAnimationFrame(waitReady); return; }
     requestAnimationFrame(function() {
-      if (loaded < origImgs.length) { waitReady(); return; }
-      requestAnimationFrame(function() { startScroll(); });
+      requestAnimationFrame(startScroll);
     });
   }
   waitReady();
 
   function startScroll() {
+    // Measure one original set width — sum of first 6 image offsetWidths + gaps
+    var gap = 0;
     var oneSetW = 0;
-    for (var i = 0; i < origImgs.length; i++) { oneSetW += origImgs[i].offsetWidth; }
+    for (var i = 0; i < origImgs.length; i++) {
+      oneSetW += origImgs[i].offsetWidth + gap;
+    }
     oneSetW = Math.round(oneSetW);
     if (oneSetW <= 0) { requestAnimationFrame(startScroll); return; }
 
-    for (var s = 0; s < 5; s++) {
-      origImgs.forEach(function(img) { track.appendChild(img.cloneNode(true)); });
-    }
-
     var x = 0;
     var paused = false;
+    var speed = 0.7; // px per frame
     var acc = 0;
-    var speed = 0.7;
 
     banner.addEventListener('mouseenter', function() { paused = true; });
     banner.addEventListener('mouseleave', function() { paused = false; });
@@ -1955,9 +2015,9 @@ function startBannerScroller(bannerId, trackId, direction) {
         if (move >= 1) {
           acc -= move;
           x += move;
+          // Wrap using modulo against ONE set width — seamless every time
           x = x % oneSetW;
-          track.style.marginLeft = (direction > 0 ? '-' : '') +
-            (direction > 0 ? x : oneSetW - x) + 'px';
+          track.style.marginLeft = '-' + x + 'px';
         }
       }
       requestAnimationFrame(tick);
@@ -1972,6 +2032,68 @@ if (isUnlocked) {
     showBanner();
   }
 }
+
+// ── VERTICAL HERO STRIPS (desktop only) ──
+function initStrip(stripId, trackId, direction) {
+  var strip = document.getElementById(stripId);
+  var track = document.getElementById(trackId);
+  if (!strip || !track) return;
+  if (window.innerWidth < 900) return;
+
+  var imgs = Array.prototype.slice.call(track.querySelectorAll('img'));
+  var loaded = 0;
+
+  imgs.forEach(function(img) {
+    if (img.complete && img.naturalWidth > 0) { loaded++; }
+    else {
+      img.addEventListener('load',  function() { loaded++; });
+      img.addEventListener('error', function() { loaded++; });
+    }
+  });
+
+  function waitReady() {
+    if (loaded < imgs.length) { requestAnimationFrame(waitReady); return; }
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() { startStrip(); });
+    });
+  }
+  waitReady();
+
+  function startStrip() {
+    // Measure one set height
+    var setH = 0;
+    imgs.forEach(function(img) { setH += img.offsetHeight; });
+    setH = Math.round(setH);
+    if (setH <= 0) { requestAnimationFrame(startStrip); return; }
+
+    // Clone images to fill 2x height for seamless loop
+    imgs.forEach(function(img) { track.appendChild(img.cloneNode(true)); });
+
+    strip.classList.add('ready');
+
+    var y = 0;
+    var acc = 0;
+    var speed = 0.4;
+    var dir = (direction === 'up') ? 1 : -1;
+
+    (function tick() {
+      acc += speed;
+      var move = Math.floor(acc);
+      if (move >= 1) {
+        acc -= move;
+        y += move * dir;
+        y = ((y % setH) + setH) % setH; // handles both up and down, never negative
+        track.style.transform = 'translateY(-' + y + 'px)';
+      }
+      requestAnimationFrame(tick);
+    }());
+  }
+}
+
+// Init both strips — left scrolls up, right scrolls down for visual interest
+initStrip('hero-strip-left',  'strip-track-left',  'up');
+initStrip('hero-strip-right', 'strip-track-right', 'down');
+
 </script>
 </body>
 </html>
